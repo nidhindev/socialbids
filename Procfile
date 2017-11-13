@@ -1,1 +1,1 @@
-web: java -jar socialbids-web/target/socialbids-web-1.0.0-SANPSHOT.jar
+web: java -Dserver.port=$PORT -jar socialbids-web/target/socialbids-web-1.0.0-SANPSHOT.jar
