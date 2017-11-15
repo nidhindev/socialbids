@@ -52,6 +52,8 @@ class CustomerService {
                 HttpEntity<MessageWrapper> entity = new HttpEntity<>(new MessageWrapper(message: sendMessage, recipient: recipient), headers)
                 responseEntity = sendToFacebook(entity)
                 break
+            case 'text':
+                break
 
 
         }
