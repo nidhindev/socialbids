@@ -55,8 +55,10 @@ class BiddingService {
         def customer = new Customer(customerId: id, customerName: customersIdNameMap.get(id), amount: minBidAmount + amountIncrement)
         customerRepository.save(customer)
         def message = new BidMessage(id: id, type: 'text', message: '1F5FF')
-        customerService.sendToCustomer(message, 'text', 'text')
-        def message2 = new BidMessage(id: oldCustomer.id, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + minBidAmount + amountIncrement + '. Do you want to raise your bid')
-        customerService.sendToCustomer(message, 'quickReply','bid')
+        customerService.sendToCustomer(message, 'text')
+        if (oldCustomer) {
+            def message2 = new BidMessage(id: oldCustomer.id, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + minBidAmount + amountIncrement + '. Do you want to raise your bid')
+            customerService.sendToCustomer(message2, 'quickReply', 'bid')
+        }
     }
 }
