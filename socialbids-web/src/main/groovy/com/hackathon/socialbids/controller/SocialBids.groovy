@@ -1,7 +1,9 @@
 package com.hackathon.socialbids.controller
 
 import com.hackathon.socialbids.domain.messenger.receive.MessengerReceivedMessage
+import com.hackathon.socialbids.service.CustomerService
 import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -14,6 +16,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST
 @RequestMapping('/socialbids')
 @Slf4j
 class SocialBids {
+
+    @Autowired
+    CustomerService customerService
+
     @RequestMapping(value = 'healthcheck', method = GET)
     ResponseEntity webhook() {
         log.info('App has started!!!')
@@ -39,6 +45,7 @@ class SocialBids {
             @RequestBody MessengerReceivedMessage  messengerReceivedMessage,
             @RequestHeader('X-Hub-Signature') String xHubSignature) {
         log.info('Request from facebook : {}', messengerReceivedMessage.entry.find().messaging.find().sender.id)
+        customerService.messageFromCustomer(messengerReceivedMessage)
         new ResponseEntity(OK)
 
     }
