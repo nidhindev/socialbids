@@ -33,8 +33,8 @@ class FlightController {
     @RequestMapping(value = 'process', method = GET)
     ResponseEntity verifyChallenge() {
 
-        //def flights = flightRepository.findAll()
-        def flight = new Flight(flightNumber: "SK1419", upperBidValue: 500, lowerBidValue: 100)
+        def flights = flightRepository.findAll()
+        def flight = flights[0]
         def flightHistorys = flightHistoryRepository.findAll()
         def overBid = false;
         flightHistorys.forEach() {
