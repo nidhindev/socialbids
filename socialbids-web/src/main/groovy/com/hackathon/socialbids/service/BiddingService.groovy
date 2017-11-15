@@ -57,7 +57,7 @@ class BiddingService {
         def message = new BidMessage(id: id, type: 'text', message: '👍')
         customerService.sendToCustomer(message, 'text', 'text')
         if (oldCustomer) {
-            def message2 = new BidMessage(id: oldCustomer.id, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + minBidAmount + amountIncrement + '. Do you want to raise your bid')
+            def message2 = new BidMessage(id: oldCustomer.customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + (minBidAmount + amountIncrement) + '. Do you want to raise your bid')
             customerService.sendToCustomer(message2, 'quickReply', 'bid')
         }
     }
