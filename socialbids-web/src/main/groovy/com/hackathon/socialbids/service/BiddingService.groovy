@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service
 class BiddingService {
 
     @Autowired
-    FlightRepository flightRepository;
+    FlightRepository flightRepository
 
     @Autowired
-    CustomerService customerService;
+    CustomerService customerService
 
     @Autowired
-    CustomerRepository customerRepository;
+    CustomerRepository customerRepository
 
     Map<String, String> customersIdNameMap = ['1563047500438143': 'Vinod', '1486773568044876': 'Divya', '1769834176420354': 'Nidhin']
 
@@ -43,7 +43,7 @@ class BiddingService {
         def flight = flights[0]
         def minBidAmount = flight.upperBidValue
         def customersPlacedBid = customerRepository.findAll()
-        def oldCustomer;
+        def oldCustomer
         if (customersPlacedBid.size() > 0) {
             customersPlacedBid.forEach() {
                 if (it.amount > minBidAmount) {
@@ -55,7 +55,7 @@ class BiddingService {
         def customer = new Customer(customerId: id, customerName: customersIdNameMap.get(id), amount: minBidAmount + amountIncrement)
         customerRepository.save(customer)
         def message = new BidMessage(id: id, type: 'text', message: '1F5FF')
-        customerService.sendToCustomer(message, 'text')
+        customerService.sendToCustomer(message, 'text', 'text')
         def message2 = new BidMessage(id: oldCustomer.id, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + minBidAmount + amountIncrement + '. Do you want to raise your bid')
         customerService.sendToCustomer(message, 'quickReply','bid')
     }

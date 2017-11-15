@@ -31,7 +31,7 @@ final class CustomerMapper {
         sendMessage
     }
 
-    static SendMessage mappToQuickReply(BidMessage bidMessage) {
+    static SendMessage mappToQuickReply(BidMessage bidMessage, String tag) {
         SendMessage sendMessage = new SendMessage()
         sendMessage.text = bidMessage.message
         List<QuickReplies> quickReplies = []
@@ -39,7 +39,7 @@ final class CustomerMapper {
             QuickReplies quickReply = new QuickReplies()
             quickReply.title = it
             quickReply.contentType = 'text'
-            quickReply.payload = it
+            quickReply.payload = tag+'_'+it
             quickReplies << quickReply
         }
         sendMessage.quickReplies = quickReplies

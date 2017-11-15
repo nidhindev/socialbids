@@ -45,7 +45,7 @@ class FlightController {
                         new BidMessage(id: "1563047500438143", type: 'quickReply', replyOptions: ['Yes', 'No'], message: 'Hi Vinod, \\n For the flight which you have booked on 26th November biding is open. \\n Do you want to participate'),
                         new BidMessage(id: "1486773568044876", type: 'quickReply', replyOptions: ['Yes', 'No'], message: 'Hi Divya, \\n For the flight which you have booked on 26th November biding is open. \\n Do you want to participate')]
         messages.forEach() {
-            customerService.sendToCustomer(it, 'quickReply')
+            customerService.sendToCustomer(it, 'quickReply', 'intro')
         }
         new ResponseEntity(OK)
 

@@ -28,7 +28,7 @@ class CustomerService {
     @Autowired JsonSlurper jsonSlurper
     @Autowired BiddingService biddingService
 
-    ResponseEntity<String> sendToCustomer(def object, String type) {
+    ResponseEntity<String> sendToCustomer(def object, String type, String tag) {
 
         ResponseEntity<String> responseEntity = null
         switch (type) {
@@ -44,7 +44,7 @@ class CustomerService {
 
             case 'quickReply':
                 BidMessage bidMessage = object as BidMessage
-                SendMessage sendMessage = CustomerMapper.mappToQuickReply(bidMessage)
+                SendMessage sendMessage = CustomerMapper.mappToQuickReply(bidMessage, tag)
                 MessengerRecipient recipient = new MessengerRecipient(id: bidMessage.id)
                 HttpHeaders headers = new HttpHeaders()
                 headers.setContentType(MediaType.APPLICATION_JSON_UTF8)
@@ -60,7 +60,6 @@ class CustomerService {
     private ResponseEntity<String> sendToFacebook(HttpEntity<MessageWrapper> entity) {
         String accessToken = 'EAAh2Dnr9X7QBAFBcPVXQMQZB8A7Jizf6rse6lbg9PUdncLXZAUk2kbHRrQCtLJ0NJ9ALLt14iUOkIHyZAjkqNp9yiLbMsCyfTdvu5Rnp9oKZBHjCxTlli9WNuhVNUTHZBkd4rn6GwLXVcHnJtodtNyTEZAzJe69GvsOhZCtHxGfGQZDZD'
         ResponseEntity<String> resEntity = null
-        def responseParamMap
         try {
             resEntity = restTemplate.exchange("https://graph.facebook.com/v2.9/me/messages?access_token=$accessToken" , HttpMethod.POST, entity, String)
         } catch (HttpClientErrorException e) {
@@ -74,8 +73,15 @@ class CustomerService {
         if(messengerMessaging.message.quick_reply) {
             String socialId = messengerMessaging.sender.id
             String postback = messengerMessaging.message.quick_reply.payload
+            String trimmedMsg = ''
+            if(postback.split('_')[0] == 'intro') {
+                trimmedMsg = postback.split('_')[1]
+            }
+            if (postback.split('_')[0] == 'bid') {
+                trimmedMsg = postback.split('_')[1].substring(1)
+            }
             log.info('The user: {} messaged :{}', socialId, postback)
-            switch (postback.toLowerCase()) {
+            switch (trimmedMsg) {
                 case 'yes' :
                     biddingService.sendBidValueToCustomer(socialId)
             }
