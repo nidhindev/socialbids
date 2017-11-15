@@ -1,1 +1,9 @@
-spring.data.mongodb.uri: mongodb://username:password@host/dabname
+#spring.data.mongodb.uri: mongodb://socialbid:socialbid@ds259865.mlab.com:59865/socialbids
+spring:
+  data:
+    mongodb:
+      port: 59865
+      database: socialbids
+      password: socialbid
+      username: socialbid
+      host: ds259865.mlab.com

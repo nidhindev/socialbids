@@ -23,27 +23,6 @@
         <module>socialbids-web</module>
     </modules>
 
-    <!--<dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        &lt;!&ndash; tag::actuator[] &ndash;&gt;
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        &lt;!&ndash; end::actuator[] &ndash;&gt;
-        &lt;!&ndash; tag::tests[] &ndash;&gt;
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        &lt;!&ndash; end::tests[] &ndash;&gt;
-    </dependencies>-->
-
-
     <build>
         <sourceDirectory>src/main/groovy</sourceDirectory>
         <testSourceDirectory>src/test/groovy</testSourceDirectory>
