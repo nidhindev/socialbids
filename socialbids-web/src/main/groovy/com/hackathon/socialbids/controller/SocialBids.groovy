@@ -39,6 +39,7 @@ class SocialBids {
             @RequestBody MessengerReceivedMessage  messengerReceivedMessage,
             @RequestHeader('X-Hub-Signature') String xHubSignature) {
         log.info('Request from facebook : {}', messengerReceivedMessage.entry.find().messaging.find().sender.id)
+        log.info('facebook message : {}', messengerReceivedMessage.entry.find().messaging.message.quick_reply.payload)
         new ResponseEntity(OK)
 
     }
