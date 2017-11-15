@@ -39,11 +39,16 @@ final class CustomerMapper {
             QuickReplies quickReply = new QuickReplies()
             quickReply.title = it
             quickReply.contentType = 'text'
-            quickReply.payload = tag+'_'+it
+            quickReply.payload = tag + '_' + it
             quickReplies << quickReply
         }
         sendMessage.quickReplies = quickReplies
         sendMessage
+
+    }
+
+    static SendMessage mappToTextMsg(BidMessage bidMessage) {
+        new SendMessage(text: bidMessage.message)
 
     }
 

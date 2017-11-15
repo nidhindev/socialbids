@@ -53,6 +53,14 @@ class CustomerService {
                 responseEntity = sendToFacebook(entity)
                 break
             case 'text':
+                BidMessage bidMessage = object as BidMessage
+                SendMessage sendMessage = CustomerMapper.mappToTextMsg(bidMessage)
+                MessengerRecipient recipient = new MessengerRecipient(id: bidMessage.id)
+                HttpHeaders headers = new HttpHeaders()
+                headers.setContentType(MediaType.APPLICATION_JSON_UTF8)
+                log.info('sending text message')
+                HttpEntity<MessageWrapper> entity = new HttpEntity<>(new MessageWrapper(message: sendMessage, recipient: recipient), headers)
+                responseEntity = sendToFacebook(entity)
                 break
 
 
