@@ -35,7 +35,7 @@ class BiddingService {
                 }
             }
         }
-        def message = new BidMessage(id: id, type: 'quickReply', replyOptions: ['+10', '+15', '+20'], message: 'Hey! exicted to have you on board. your base bid is ' + minBidAmount + '. Please place your bid')
+        def message = new BidMessage(id: id, type: 'quickReply', replyOptions: ['+10', '+15', '+20'], message: 'Hey! excited to have you on board. your base bid is ' + minBidAmount + '. Please place your bid')
         customerService.sendToCustomer(message, 'quickReply')
     }
 
@@ -53,6 +53,8 @@ class BiddingService {
             }
         }
         def customer = new Customer(customerId: id, customerName: customersIdNameMap.get(id), amount: minBidAmount+amountIncrement)
-
+        customerRepository.save(customer)
+        def message = new BidMessage(id: id, type: 'text', message: '1F5FF')
+        customerService.sendToCustomer(message, 'text')
     }
 }
