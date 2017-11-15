@@ -20,7 +20,7 @@ class GenericMessage {
     @RequestMapping(method = POST)
     ResponseEntity genericMessage(@RequestBody FlightOffer flightOffer) {
 
-        CustomerService.sendToCustomer(flightOffer, flightOffer.type)
+        CustomerService.sendToCustomer(flightOffer, flightOffer.type,'')
 
 
     }
