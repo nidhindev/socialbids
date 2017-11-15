@@ -1,9 +1,7 @@
 package com.hackathon.socialbids.domain.messenger.receive
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.klm.socialautomation.mapp.model.common.MessengerRecipient
 import groovy.transform.Canonical
-
 
 @Canonical
 @JsonInclude(JsonInclude.Include.NON_NULL)
