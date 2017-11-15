@@ -1,5 +1,6 @@
 package com.hackathon.socialbids.service
 
+import com.hackathon.socialbids.domain.bid.BidMessage
 import com.hackathon.socialbids.domain.flightOffer.FlightOffer
 import com.hackathon.socialbids.domain.messenger.receive.MessengerRecipient
 import com.hackathon.socialbids.domain.messenger.send.MessageWrapper
@@ -24,17 +25,30 @@ class CustomerService {
     @Autowired  RestTemplate restTemplate
     @Autowired JsonSlurper jsonSlurper
 
-    ResponseEntity<String> sendToCustomer(FlightOffer flightOffer) {
+    ResponseEntity<String> sendToCustomer(def object, String type) {
 
         ResponseEntity<String> responseEntity = null
-        switch (flightOffer.type) {
+        switch (type) {
             case 'carousal':
+                FlightOffer flightOffer = object as FlightOffer
                 SendMessage sendMessage = CustomerMapper.mappToCarousal(flightOffer)
                 MessengerRecipient recipient = new MessengerRecipient(id: flightOffer.id)
                 HttpHeaders headers = new HttpHeaders()
                 headers.setContentType(MediaType.APPLICATION_JSON_UTF8)
                 HttpEntity<MessageWrapper> entity = new HttpEntity<>(new MessageWrapper(message: sendMessage, recipient: recipient), headers)
                 responseEntity = sendToFacebook(entity)
+                break
+
+            case 'quickReply':
+                BidMessage bidMessage = object as BidMessage
+                SendMessage sendMessage = CustomerMapper.mappToQuickReply(bidMessage)
+                MessengerRecipient recipient = new MessengerRecipient(id: bidMessage.id)
+                HttpHeaders headers = new HttpHeaders()
+                headers.setContentType(MediaType.APPLICATION_JSON_UTF8)
+                HttpEntity<MessageWrapper> entity = new HttpEntity<>(new MessageWrapper(message: sendMessage, recipient: recipient), headers)
+                responseEntity = sendToFacebook(entity)
+                break
+
 
         }
         responseEntity
