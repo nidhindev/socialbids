@@ -34,7 +34,7 @@ class BiddingService {
             }
         }
         def message = new BidMessage(id: id, type: 'quickReply', replyOptions: ['+10', '+15', '+20'], message: 'Hey! excited to have you on board. your base bid is ' + minBidAmount + '. Please place your bid')
-        customerService.sendToCustomer(message, 'quickReply','bid')
+        customerService.sendToCustomer(message, 'quickReply', 'bid')
     }
 
     void saveCustomerBid(String id, Long amountIncrement) {
@@ -56,7 +56,9 @@ class BiddingService {
         customerRepository.save(customer)
         def message = new BidMessage(id: id, type: 'text', message: '1F5FF')
         customerService.sendToCustomer(message, 'text')
-        def message2 = new BidMessage(id: oldCustomer.id, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + minBidAmount + amountIncrement + '. Do you want to raise your bid')
-        customerService.sendToCustomer(message, 'quickReply','bid')
+        if (oldCustomer) {
+            def message2 = new BidMessage(id: oldCustomer.id, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + minBidAmount + amountIncrement + '. Do you want to raise your bid')
+            customerService.sendToCustomer(message2, 'quickReply', 'bid')
+        }
     }
 }
