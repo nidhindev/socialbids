@@ -39,7 +39,7 @@ class SocialBids {
     ResponseEntity webhook(
             @RequestBody MessengerReceivedMessage  messengerReceivedMessage,
             @RequestHeader('X-Hub-Signature') String xHubSignature) {
-        log.info('Request from facebook :', messengerReceivedMessage.entry.find(id))
+        log.info('Request from facebook : {}', messengerReceivedMessage.entry.find().id)
         new ResponseEntity(OK)
 
     }
