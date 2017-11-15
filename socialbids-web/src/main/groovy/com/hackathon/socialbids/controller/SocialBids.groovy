@@ -1,7 +1,6 @@
 package com.hackathon.socialbids.controller
 
 import com.hackathon.socialbids.domain.messenger.receive.MessengerReceivedMessage
-import com.hackathon.socialbids.domain.messenger.receive.MessengerRecipient
 import groovy.util.logging.Slf4j
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -39,7 +38,7 @@ class SocialBids {
     ResponseEntity webhook(
             @RequestBody MessengerReceivedMessage  messengerReceivedMessage,
             @RequestHeader('X-Hub-Signature') String xHubSignature) {
-        log.info('Request from facebook : {}', messengerReceivedMessage.entry.find().id)
+        log.info('Request from facebook : {}', messengerReceivedMessage.entry.find().messaging.find().sender.id)
         new ResponseEntity(OK)
 
     }
