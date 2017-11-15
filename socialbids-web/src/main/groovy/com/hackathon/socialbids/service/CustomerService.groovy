@@ -2,6 +2,8 @@ package com.hackathon.socialbids.service
 
 import com.hackathon.socialbids.domain.bid.BidMessage
 import com.hackathon.socialbids.domain.flightOffer.FlightOffer
+import com.hackathon.socialbids.domain.messenger.receive.MessengerMessaging
+import com.hackathon.socialbids.domain.messenger.receive.MessengerReceivedMessage
 import com.hackathon.socialbids.domain.messenger.receive.MessengerRecipient
 import com.hackathon.socialbids.domain.messenger.send.MessageWrapper
 import com.hackathon.socialbids.domain.messenger.send.SendMessage
@@ -64,5 +66,15 @@ class CustomerService {
             log.error('HttpClientErrorException error:  {}', e)
         }
         resEntity
+    }
+
+    static  def messageFromCustomer(MessengerReceivedMessage messengerReceivedMessage) {
+        MessengerMessaging messengerMessaging = messengerReceivedMessage.entry.find().messaging.find() as MessengerMessaging
+        if(messengerMessaging.message.quick_reply) {
+            String socialId = messengerMessaging.sender.id
+            String postback = messengerMessaging.message.quick_reply.payload
+            log.info('The user: {} messaged :{}', socialId, postback)
+        }
+
     }
 }
