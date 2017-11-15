@@ -82,7 +82,7 @@ class CustomerService {
                 trimmedMsg = postback.split('_')[1].substring(1)
             }
             log.info('The user: {} messaged :{}', socialId, postback)
-            switch (trimmedMsg) {
+            switch (trimmedMsg.toLowerCase()) {
                 case 'yes' :
                     log.info('send for sendBidValueToCustomer')
                     biddingService.sendBidValueToCustomer(socialId)
