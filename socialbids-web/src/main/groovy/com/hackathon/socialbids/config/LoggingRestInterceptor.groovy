@@ -12,7 +12,6 @@ class LoggingRestInterceptor implements ClientHttpRequestInterceptor {
     ClientHttpResponse intercept(HttpRequest httpRequest, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         log.info('Request: {} {}\npayload: {}', httpRequest.method, httpRequest.URI, new String(body))
         ClientHttpResponse response = execution.execute(httpRequest, body)
-        log.info('Response: {}\npayload: {}', response.statusCode, response.body.text)
         response
     }
 }

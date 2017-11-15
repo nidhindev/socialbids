@@ -20,9 +20,10 @@ class AppConfig {
     @Bean
     RestTemplate restTemplate() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory()
-        requestFactory.connectTimeout = 1000
-        requestFactory.readTimeout = 1000
+        requestFactory.connectTimeout = 10000
+        requestFactory.readTimeout = 10000
         RestTemplate restTemplate = new RestTemplate(requestFactory)
+        requestFactory.setOutputStreaming(false)
         restTemplate.setInterceptors(Arrays.<ClientHttpRequestInterceptor> asList(loggingHttpRequestInterceptor()))
         restTemplate
     }
