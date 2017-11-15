@@ -1,6 +1,7 @@
 package com.hackathon.socialbids.controller
 
 import com.hackathon.socialbids.domain.Flight
+import com.hackathon.socialbids.domain.bid.BidMessage
 import com.hackathon.socialbids.repositories.FlightHistoryRepository
 import com.hackathon.socialbids.repositories.FlightRepository
 import groovy.util.logging.Slf4j
@@ -39,6 +40,9 @@ class FlightController {
             if(it.soldBusinessSeats.toInteger()>7)
                 overBid = true
         }
+        def messages = [new BidMessage(id:"1769834176420354", type: 'quickReply', replyOptions:['Yes','No'], message: 'Hi Nidhin dev, \\n For the flight which you have booked on 26th November biding is open. \\n Do you want to participate'),
+                        new BidMessage(id:"1563047500438143", type: 'quickReply', replyOptions:['Yes','No'], message: 'Hi Vinod, \\n For the flight which you have booked on 26th November biding is open. \\n Do you want to participate'),
+                        new BidMessage(id:"1486773568044876", type: 'quickReply', replyOptions:['Yes','No'], message: 'Hi Divya, \\n For the flight which you have booked on 26th November biding is open. \\n Do you want to participate')]
 
         new ResponseEntity(OK)
 
