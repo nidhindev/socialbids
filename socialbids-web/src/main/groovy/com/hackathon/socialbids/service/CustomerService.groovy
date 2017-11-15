@@ -48,6 +48,7 @@ class CustomerService {
                 MessengerRecipient recipient = new MessengerRecipient(id: bidMessage.id)
                 HttpHeaders headers = new HttpHeaders()
                 headers.setContentType(MediaType.APPLICATION_JSON_UTF8)
+                log.info('sending carousal')
                 HttpEntity<MessageWrapper> entity = new HttpEntity<>(new MessageWrapper(message: sendMessage, recipient: recipient), headers)
                 responseEntity = sendToFacebook(entity)
                 break
@@ -83,6 +84,7 @@ class CustomerService {
             log.info('The user: {} messaged :{}', socialId, postback)
             switch (trimmedMsg) {
                 case 'yes' :
+                    log.info('send for sendBidValueToCustomer')
                     biddingService.sendBidValueToCustomer(socialId)
             }
 
