@@ -26,6 +26,7 @@ class CustomerService {
 
     @Autowired  RestTemplate restTemplate
     @Autowired JsonSlurper jsonSlurper
+    @Autowired BiddingService biddingService
 
     ResponseEntity<String> sendToCustomer(def object, String type) {
 
@@ -68,12 +69,17 @@ class CustomerService {
         resEntity
     }
 
-    static  def messageFromCustomer(MessengerReceivedMessage messengerReceivedMessage) {
+     def messageFromCustomer(MessengerReceivedMessage messengerReceivedMessage) {
         MessengerMessaging messengerMessaging = messengerReceivedMessage.entry.find().messaging.find() as MessengerMessaging
         if(messengerMessaging.message.quick_reply) {
             String socialId = messengerMessaging.sender.id
             String postback = messengerMessaging.message.quick_reply.payload
             log.info('The user: {} messaged :{}', socialId, postback)
+            switch (postback.toLowerCase()) {
+                case 'yes' :
+                    biddingService.sendBidValueToCustomer(socialId)
+            }
+
         }
 
     }
