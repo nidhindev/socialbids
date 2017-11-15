@@ -34,10 +34,10 @@ class BiddingService {
             }
         }
         def message = new BidMessage(id: id, type: 'quickReply', replyOptions: ['+10', '+15', '+20'], message: 'Hey! excited to have you on board. your base bid is ' + minBidAmount + '. Please place your bid')
-        customerService.sendToCustomer(message, 'quickReply','bid')
+        customerService.sendToCustomer(message, 'quickReply', 'bid')
     }
 
-    void saveCustomerBid(String id, Long amountIncrement) {
+    void saveCustomerBid(String id, Long amountIncrement, boolean isRebid) {
 
         def flights = flightRepository.findAll()
         def flight = flights[0]
@@ -52,13 +52,28 @@ class BiddingService {
                 }
             }
         }
-        def customer = new Customer(customerId: id, customerName: customersIdNameMap.get(id), amount: minBidAmount + amountIncrement)
-        customerRepository.save(customer)
-        def message = new BidMessage(id: id, type: 'text', message: '👍')
-        customerService.sendToCustomer(message, 'text', 'text')
-        if (oldCustomer) {
-            def message2 = new BidMessage(id: oldCustomer.customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + (minBidAmount + amountIncrement) + '. Do you want to raise your bid')
-            customerService.sendToCustomer(message2, 'quickReply', 'bid')
+        List<Customer> customers = customerRepository.findByCustomerId(id);
+        def customerBid = 0;
+        if (customers) {
+            customers.forEach() {
+                if (it.amount > customerBid) {
+                    customerBid = it.amount
+                }
+            }
+        }
+        if (customerBid + amountIncrement < minBidAmount && customerBid > 0 && !isRebid) {
+            def message2 = new BidMessage(id: customers[0].customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you are too late to respond. Do you like to bid on  ' + (minBidAmount + amountIncrement) + '?')
+            customerService.sendToCustomer(message2, 'quickReply', 'rebid')
+        } else {
+
+            def newCustomer = new Customer(customerId: id, customerName: customersIdNameMap.get(id), amount: minBidAmount + amountIncrement)
+            customerRepository.save(newCustomer)
+            def message = new BidMessage(id: id, type: 'text', message: '👍')
+            customerService.sendToCustomer(message, 'text', 'text')
+            if (oldCustomer) {
+                def message2 = new BidMessage(id: oldCustomer.customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + (minBidAmount + amountIncrement) + '. Do you want to raise your bid?')
+                customerService.sendToCustomer(message2, 'quickReply', 'bid')
+            }
         }
     }
 }

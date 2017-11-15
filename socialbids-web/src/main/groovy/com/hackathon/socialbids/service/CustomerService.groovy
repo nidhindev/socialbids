@@ -11,11 +11,7 @@ import com.hackathon.socialbids.mapper.CustomerMapper
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
+import org.springframework.http.*
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
@@ -24,9 +20,12 @@ import org.springframework.web.client.RestTemplate
 @Slf4j
 class CustomerService {
 
-    @Autowired  RestTemplate restTemplate
-    @Autowired JsonSlurper jsonSlurper
-    @Autowired BiddingService biddingService
+    @Autowired
+    RestTemplate restTemplate
+    @Autowired
+    JsonSlurper jsonSlurper
+    @Autowired
+    BiddingService biddingService
 
     ResponseEntity<String> sendToCustomer(def object, String type, String tag) {
 
@@ -72,37 +71,41 @@ class CustomerService {
         String accessToken = 'EAAh2Dnr9X7QBAFBcPVXQMQZB8A7Jizf6rse6lbg9PUdncLXZAUk2kbHRrQCtLJ0NJ9ALLt14iUOkIHyZAjkqNp9yiLbMsCyfTdvu5Rnp9oKZBHjCxTlli9WNuhVNUTHZBkd4rn6GwLXVcHnJtodtNyTEZAzJe69GvsOhZCtHxGfGQZDZD'
         ResponseEntity<String> resEntity = null
         try {
-            resEntity = restTemplate.exchange("https://graph.facebook.com/v2.9/me/messages?access_token=$accessToken" , HttpMethod.POST, entity, String)
+            resEntity = restTemplate.exchange("https://graph.facebook.com/v2.9/me/messages?access_token=$accessToken", HttpMethod.POST, entity, String)
         } catch (HttpClientErrorException e) {
             log.error('HttpClientErrorException error:  {}', e)
         }
         resEntity
     }
 
-     def messageFromCustomer(MessengerReceivedMessage messengerReceivedMessage) {
+    def messageFromCustomer(MessengerReceivedMessage messengerReceivedMessage) {
         MessengerMessaging messengerMessaging = messengerReceivedMessage.entry.find().messaging.find() as MessengerMessaging
-        if(messengerMessaging.message.quick_reply) {
+        if (messengerMessaging.message.quick_reply) {
             String socialId = messengerMessaging.sender.id
             String postback = messengerMessaging.message.quick_reply.payload
             String trimmedMsg = ''
-            if(postback.split('_')[0] == 'intro') {
+            boolean isRebid = false
+            if (postback.split('_')[0] == 'intro') {
                 trimmedMsg = postback.split('_')[1]
             }
             if (postback.split('_')[0] == 'bid') {
                 trimmedMsg = postback.split('_')[1].substring(1)
             }
+            if (postback.split('_')[0] == 'rebid') {
+                trimmedMsg = postback.split('_')[1].substring(1)
+                isRebid = true;
+            }
             log.info('The user: {} messaged :{}', socialId, postback)
             switch (trimmedMsg.toLowerCase()) {
-                case 'yes' :
+                case 'yes':
                     log.info('send for sendBidValueToCustomer')
                     biddingService.sendBidValueToCustomer(socialId)
                     break
-                case '10' :
-                    case '20':
-                    case '15':
+                case '10':
+                case '20':
+                case '15':
                     log.info(' sending to save bid: {}', trimmedMsg)
-                    biddingService.saveCustomerBid(socialId, trimmedMsg as Long)
-
+                    biddingService.saveCustomerBid(socialId, trimmedMsg as Long, isRebid)
 
 
             }
