@@ -86,6 +86,15 @@ class CustomerService {
                 case 'yes' :
                     log.info('send for sendBidValueToCustomer')
                     biddingService.sendBidValueToCustomer(socialId)
+                    break
+                case '10' :
+                    case '20':
+                    case '15':
+                    log.info(' sending to save bid: {}', trimmedMsg)
+                    biddingService.saveCustomerBid(socialId, trimmedMsg as Long)
+
+
+
             }
 
         }
