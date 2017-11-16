@@ -108,7 +108,7 @@ class BiddingService {
                 offer.winners.add(it.customerId)
             }
             it.result = false
-            def message2 = new BidMessage(id: oldCustomer.customerId, type: 'text', message: 'Sorry to say!! You have lost the bid. You will receive the token of appreciation shortly')
+            def message2 = new BidMessage(id: it.customerId, type: 'text', message: 'Sorry to say!! You have lost the bid. You will receive the token of appreciation shortly')
             customerService.sendToCustomer(message2, 'text', 'bid')
             offer.loosers.add(it.customerId)
         }
