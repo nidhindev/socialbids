@@ -103,7 +103,7 @@ class BiddingService {
         customerList.forEach() {
             if (hightesBidder.customerId == it.customerId) {
                 it.result = true
-                def message2 = new BidMessage(id: it.customerId, type: 'text', message: 'Congratulations!! You have won the bid for ' + it.amount + 'Euro. You will receive the confirmation shortly')
+                def message2 = new BidMessage(id: it.customerId, type: 'text', message: 'Congratulations 🎉🎉🎉 You have won the bid for ' + it.amount + 'Euro. You will receive the confirmation shortly')
                 customerService.sendToCustomer(message2, 'text', 'bid')
                 offer.winners.add(it.customerId)
             }
