@@ -106,11 +106,12 @@ class BiddingService {
                 def message2 = new BidMessage(id: it.customerId, type: 'text', message: 'Congratulations 🎉🎉🎉 You have won the bid for ' + it.amount + 'Euro. You will receive the confirmation shortly')
                 customerService.sendToCustomer(message2, 'text', 'bid')
                 offer.winners.add(it.customerId)
+            } else {
+                it.result = false
+                def message2 = new BidMessage(id: it.customerId, type: 'text', message: 'Sorry to say!! You have lost the bid. You will receive the token of appreciation shortly')
+                customerService.sendToCustomer(message2, 'text', 'bid')
+                offer.loosers.add(it.customerId)
             }
-            it.result = false
-            def message2 = new BidMessage(id: it.customerId, type: 'text', message: 'Sorry to say!! You have lost the bid. You will receive the token of appreciation shortly')
-            customerService.sendToCustomer(message2, 'text', 'bid')
-            offer.loosers.add(it.customerId)
         }
         try {
             ResponseEntity object = restTemplate.postForObject('https://gamifybids.herokuapp.com/finalizebids', offer, Offer)
