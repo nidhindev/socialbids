@@ -15,4 +15,5 @@ class Customer {
     String customerName
     Long amount
     Boolean result
+    Boolean isOldBid
 }

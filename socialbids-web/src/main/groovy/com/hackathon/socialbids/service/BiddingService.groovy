@@ -52,28 +52,35 @@ class BiddingService {
                 }
             }
         }
-        List<Customer> customers = customerRepository.findByCustomerId(id);
-        def customerBid = 0;
-        if (customers) {
-            customers.forEach() {
-                if (it.amount > customerBid) {
-                    customerBid = it.amount
-                }
-            }
-        }
-        if (customerBid + amountIncrement < minBidAmount && customerBid > 0 && !isRebid) {
-            def message2 = new BidMessage(id: customers[0].customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you are too late to respond. Do you like to bid on  ' + (minBidAmount + amountIncrement) + '?')
-            customerService.sendToCustomer(message2, 'quickReply', 'rebid')
-        } else {
+        Customer customer = customerRepository.findByCustomerId(id);
+        /* def customerBid = 0;
+         if (customers) {
+             customers.forEach() {
+                 if (it.amount > customerBid) {
+                     customerBid = it.amount
+                 }
+             }
+         }
+         if (customerBid + amountIncrement < minBidAmount && customerBid > 0 && !isRebid) {
+             def message2 = new BidMessage(id: customers[0].customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you are too late to respond. Do you like to bid on  ' + (minBidAmount + amountIncrement) + '?')
+             customerService.sendToCustomer(message2, 'quickReply', 'rebid')
+         } else {*/
 
+        if (customer) {
+            customer.amount = minBidAmount + amountIncrement
+            customerRepository.save(customer)
+        } else {
             def newCustomer = new Customer(customerId: id, customerName: customersIdNameMap.get(id), amount: minBidAmount + amountIncrement)
             customerRepository.save(newCustomer)
-            def message = new BidMessage(id: id, type: 'text', message: '👍')
-            customerService.sendToCustomer(message, 'text', 'text')
-            if (oldCustomer) {
-                def message2 = new BidMessage(id: oldCustomer.customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + (minBidAmount + amountIncrement) + '. Do you want to raise your bid?')
-                customerService.sendToCustomer(message2, 'quickReply', 'bid')
-            }
+        }
+        def message = new BidMessage(id: id, type: 'text', message: '👍')
+        customerService.sendToCustomer(message, 'text', 'text')
+        if (oldCustomer) {
+            def message2 = new BidMessage(id: oldCustomer.customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + (minBidAmount + amountIncrement) + '. Do you want to raise your bid?')
+            customerService.sendToCustomer(message2, 'quickReply', 'bid')
+            /*oldCustomer.isOldBid = true
+            customerRepository.save(oldCustomer)*/
+            //}
         }
     }
 }
