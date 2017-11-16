@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface CustomerRepository extends MongoRepository<Customer, String> {
 
-    Customer findAllByCustomerId(String customerId)
+    Customer findByCustomerId(String customerId)
 
 }
