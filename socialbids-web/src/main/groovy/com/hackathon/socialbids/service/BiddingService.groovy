@@ -83,4 +83,23 @@ class BiddingService {
             //}
         }
     }
+
+    void finalizeBids() {
+        List<Customer> customerList = customerRepository.findAll()
+        Customer hightesBidder = customerList[0]
+        customerList.forEach() {
+            if (it.amount > hightesBidder.amount)
+                hightesBidder = it
+        }
+        customerList.forEach() {
+            if (hightesBidder.customerId == it.customerId){
+                it.result = true
+                def message2 = new BidMessage(id: oldCustomer.customerId, type: 'text', message: 'Congratulations!! You have won the bid for '+ (minBidAmount + amountIncrement) + 'Euro. You will receive the confirmation shortly')
+                customerService.sendToCustomer(message2, 'quickReply', 'bid')
+            }
+
+            it.result = false
+        }
+
+    }
 }
