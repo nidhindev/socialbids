@@ -47,7 +47,8 @@ class FlightController {
         }
         def messages = [new BidMessage(id: "1769834176420354", type: 'quickReply', replyOptions: ['Yes', 'No'], message: 'Hi Nidhin dev,  For the Flight ✈️ which you have booked on 26th November biding for Paid upgrade is open. Do you want to participate?'),
                         new BidMessage(id: "1563047500438143", type: 'quickReply', replyOptions: ['Yes', 'No'], message: 'Hi Vinod,  For the Flight ✈️ which you have booked on 26th November biding Paid upgrade is open. Do you want to participate?'),
-                        new BidMessage(id: "1486773568044876", type: 'quickReply', replyOptions: ['Yes', 'No'], message: 'Hi Divya,  For the Flight ✈️ which you have booked on 26th November biding Paid upgrade is open. Do you want to participate?')]
+                        new BidMessage(id: "1486773568044876", type: 'quickReply', replyOptions: ['Yes', 'No'], message: 'Hi Divya,  For the Flight ✈️ which you have booked on 26th November biding Paid upgrade is open. Do you want to participate?'),
+                        new BidMessage(id: "1530825326952542", type: 'quickReply', replyOptions: ['Yes', 'No'], message: 'Hi Devayan,  For the Flight ✈️ which you have booked on 26th November biding Paid upgrade is open. Do you want to participate?')]
         messages.forEach() {
             customerService.sendToCustomer(it, 'quickReply', 'intro')
         }
