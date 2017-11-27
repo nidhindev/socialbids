@@ -60,35 +60,38 @@ class BiddingService {
                 }
             }
         }
+        log.info(id)
         Customer customer = customerRepository.findByCustomerId(id);
-        /* def customerBid = 0;
-         if (customers) {
-             customers.forEach() {
-                 if (it.amount > customerBid) {
-                     customerBid = it.amount
-                 }
-             }
-         }
-         if (customerBid + amountIncrement < minBidAmount && customerBid > 0 && !isRebid) {
-             def message2 = new BidMessage(id: customers[0].customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you are too late to respond. Do you like to bid on  ' + (minBidAmount + amountIncrement) + '?')
-             customerService.sendToCustomer(message2, 'quickReply', 'rebid')
-         } else {*/
 
-        if (customer) {
-            customer.amount = minBidAmount + amountIncrement
+        if (customer != null && customer.amount != null && customer.amount + amountIncrement < minBidAmount && !customer.isOldBid) {
+            def message2 = new BidMessage(id: customer.customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'Sorry! mean time you got over bid by another passenger with ' + minBidAmount + '. Do you want to raise your bid?')
+            customer.isOldBid = true;
             customerRepository.save(customer)
-        } else {
-            def newCustomer = new Customer(customerId: id, customerName: customersIdNameMap.get(id), amount: minBidAmount + amountIncrement)
-            customerRepository.save(newCustomer)
-        }
-        def message = new BidMessage(id: id, type: 'text', message: '👍')
-        customerService.sendToCustomer(message, 'text', 'text')
-        if (oldCustomer) {
-            def message2 = new BidMessage(id: oldCustomer.customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + (minBidAmount + amountIncrement) + '. Do you want to raise your bid?')
             customerService.sendToCustomer(message2, 'quickReply', 'bid')
-            /*oldCustomer.isOldBid = true
-            customerRepository.save(oldCustomer)*/
-            //}
+            log.info('inside rebid')
+        } else {
+            log.info('inside else')
+
+            if (customer) {
+                customer.isOldBid = false
+                customer.amount = minBidAmount + amountIncrement
+                customerRepository.save(customer)
+                log.info('inside else if')
+            } else {
+                def newCustomer = new Customer(customerId: id, customerName: customersIdNameMap.get(id), amount: minBidAmount + amountIncrement)
+                customerRepository.save(newCustomer)
+                log.info('inside new customer')
+            }
+
+            def message = new BidMessage(id: id, type: 'text', message: '👍')
+            customerService.sendToCustomer(message, 'text', 'text')
+            if (oldCustomer) {
+                def message2 = new BidMessage(id: oldCustomer.customerId, type: 'quickReply', replyOptions: ['+10', '+15', '+20', 'No'], message: 'you got over bid by another passenger with ' + (minBidAmount + amountIncrement) + '. Do you want to raise your bid?')
+                customerService.sendToCustomer(message2, 'quickReply', 'bid')
+                /*oldCustomer.isOldBid = true
+                customerRepository.save(oldCustomer)*/
+                //}
+            }
         }
     }
 
@@ -106,11 +109,12 @@ class BiddingService {
                 def message2 = new BidMessage(id: it.customerId, type: 'text', message: 'Congratulations 🎉🎉🎉 You have won the bid for ' + it.amount + 'Euro. You will receive the confirmation shortly')
                 customerService.sendToCustomer(message2, 'text', 'bid')
                 offer.winners.add(it.customerId)
+            } else {
+                it.result = false
+                def message2 = new BidMessage(id: it.customerId, type: 'text', message: 'Sorry to say!! You have lost the bid. You will receive the token of appreciation shortly')
+                customerService.sendToCustomer(message2, 'text', 'bid')
+                offer.loosers.add(it.customerId)
             }
-            it.result = false
-            def message2 = new BidMessage(id: it.customerId, type: 'text', message: 'Sorry to say!! You have lost the bid. You will receive the token of appreciation shortly')
-            customerService.sendToCustomer(message2, 'text', 'bid')
-            offer.loosers.add(it.customerId)
         }
         try {
             ResponseEntity object = restTemplate.postForObject('https://gamifybids.herokuapp.com/finalizebids', offer, Offer)
