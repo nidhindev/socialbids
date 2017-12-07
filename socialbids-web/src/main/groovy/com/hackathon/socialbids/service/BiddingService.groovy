@@ -27,7 +27,7 @@ class BiddingService {
     @Autowired
     RestTemplate restTemplate
 
-    Map<String, String> customersIdNameMap = ['1563047500438143': 'Vinod', '1486773568044876': 'Divya', '1769834176420354': 'Nidhin', '1530825326952542': 'Devayan']
+    Map<String, String> customersIdNameMap = ['1563047500438143': 'Vinod', '1486773568044876': 'Divya', '1769834176420354': 'Nidhin', '1530825326952542': 'Devayan', 'Jijitha': '1352389964888481']
 
     void sendBidValueToCustomer(String id) {
         def flights = flightRepository.findAll()
